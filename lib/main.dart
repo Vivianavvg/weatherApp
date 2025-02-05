@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const WeatherApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class WeatherApp extends StatelessWidget {
+  const WeatherApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,22 +16,37 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Weather App'),
+      home: const WeatherHomePage(title: 'Weather App'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class WeatherHomePage extends StatefulWidget {
+  const WeatherHomePage({super.key, required this.title});
 
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  WeatherHomePageState createState() => WeatherHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class WeatherHomePageState extends State<WeatherHomePage> {
   List<Map<String, String>> _weekForecast = [];
+
+  final TextEditingController _cityController = TextEditingController();
+  String cityName = 'City Name';
+  String temperature = 'Temperature';
+  String weatherCondition = 'Condition';
+
+  void _fetchWeather() {
+    setState(() {
+      //Placeholder: replace with actual API call Later
+      cityName =
+          _cityController.text.isNotEmpty ? _cityController.text : 'Unknown';
+      temperature = '25C';
+      weatherCondition = 'Sunny';
+    });
+  }
 
   void _getWeekForecast() {
     setState(() {
@@ -58,6 +73,31 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            TextField(
+              controller: _cityController,
+              decoration: InputDecoration(
+                  labelText: 'Enter City Name', border: OutlineInputBorder()),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: _fetchWeather,
+              child: const Text('Fetch Weather'),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              cityName,
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              temperature,
+              style: const TextStyle(fontSize: 20),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              weatherCondition,
+              style: const TextStyle(fontSize: 20, fontStyle: FontStyle.italic),
+            ),
             SevenDayForecast(
               weekForecast: _weekForecast,
               onGetForecast: _getWeekForecast,
@@ -68,7 +108,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
 
 // Seven day forecast widget
 class SevenDayForecast extends StatelessWidget {
