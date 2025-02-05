@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -34,6 +36,8 @@ class WeatherHomePageState extends State<WeatherHomePage> {
   List<Map<String, String>> _weekForecast = [];
 
   final TextEditingController _cityController = TextEditingController();
+  final conditions = ['Sunny', 'Cloudy', 'Rainy'];
+
   String cityName = 'City Name';
   String temperature = 'Temperature';
   String weatherCondition = 'Condition';
@@ -43,8 +47,8 @@ class WeatherHomePageState extends State<WeatherHomePage> {
       //Placeholder: replace with actual API call Later
       cityName =
           _cityController.text.isNotEmpty ? _cityController.text : 'Unknown';
-      temperature = '25C';
-      weatherCondition = 'Sunny';
+      temperature = '${15 + Random().nextInt(16)}C';
+      weatherCondition = conditions[Random().nextInt(conditions.length)];
     });
   }
 
@@ -98,6 +102,7 @@ class WeatherHomePageState extends State<WeatherHomePage> {
               weatherCondition,
               style: const TextStyle(fontSize: 20, fontStyle: FontStyle.italic),
             ),
+            const SizedBox(height: 8),
             SevenDayForecast(
               weekForecast: _weekForecast,
               onGetForecast: _getWeekForecast,
