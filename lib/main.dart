@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import  'dart:math';
 
 void main() {
   runApp(const WeatherApp());
@@ -41,10 +42,11 @@ class WeatherHomePageState extends State<WeatherHomePage> {
   void _fetchWeather() {
     setState(() {
       //Placeholder: replace with actual API call Later
-      cityName =
-          _cityController.text.isNotEmpty ? _cityController.text : 'Unknown';
-      temperature = '25C';
-      weatherCondition = 'Sunny';
+
+      cityName = _cityController.text.isNotEmpty ? _cityController.text : 'Unknown';
+      temperature = "${Random().nextInt(16)+15}C";
+      List<String> conditions = ['sunny', 'cloudy', 'rainy'];
+      weatherCondition = conditions[Random().nextInt(conditions.length)];
     });
   }
 
@@ -73,11 +75,18 @@ class WeatherHomePageState extends State<WeatherHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextField(
-              controller: _cityController,
-              decoration: InputDecoration(
-                  labelText: 'Enter City Name', border: OutlineInputBorder()),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: TextField(
+                controller: _cityController,
+                decoration: InputDecoration(
+                  labelText: 'Enter City Name',
+                  border: OutlineInputBorder()
+                ),
+              ),
             ),
+
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _fetchWeather,
