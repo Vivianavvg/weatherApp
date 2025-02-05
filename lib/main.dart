@@ -7,69 +7,76 @@ void main() {
 class WeatherApp extends StatelessWidget {
   const WeatherApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Weather App',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const WeatherHomePage(),
+      home: const WeatherHomePage(title: 'Weather App'),
     );
   }
 }
 
 class WeatherHomePage extends StatefulWidget {
-  const WeatherHomePage({super.key});
+  const WeatherHomePage({super.key, required this.title});
 
+  final String title;
 
   @override
   WeatherHomePageState createState() => WeatherHomePageState();
 }
 
-
-
 class WeatherHomePageState extends State<WeatherHomePage> {
+  List<Map<String, String>> _weekForecast = [];
+
   final TextEditingController _cityController = TextEditingController();
   String cityName = 'City Name';
   String temperature = 'Temperature';
   String weatherCondition = 'Condition';
 
-  void _fetchWeather(){
-    setState((){
+  void _fetchWeather() {
+    setState(() {
       //Placeholder: replace with actual API call Later
-      cityName = _cityController.text.isNotEmpty ? _cityController.text : 'Unknown';
+      cityName =
+          _cityController.text.isNotEmpty ? _cityController.text : 'Unknown';
       temperature = '25C';
       weatherCondition = 'Sunny';
     });
   }
 
-
+  void _getWeekForecast() {
+    setState(() {
+      _weekForecast = [
+        {'day': 'Sunday', 'temp': '65'},
+        {'day': 'Monday', 'temp': '70'},
+        {'day': 'Tuesday', 'temp': '72'},
+        {'day': 'Wednesday', 'temp': '75'},
+        {'day': 'Thursday', 'temp': '73'},
+        {'day': 'Friday', 'temp': '70'},
+        {'day': 'Saturday', 'temp': '68'},
+      ];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
-     
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
- 
-        title: const Text('Weather App'),
+        title: Text(widget.title),
       ),
       body: Center(
-
         child: Column(
-
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextField(
               controller: _cityController,
               decoration: InputDecoration(
-                labelText: 'Enter City Name',
-                border: OutlineInputBorder()
-              ),
+                  labelText: 'Enter City Name', border: OutlineInputBorder()),
             ),
             const SizedBox(height: 16),
             ElevatedButton(
@@ -88,8 +95,100 @@ class WeatherHomePageState extends State<WeatherHomePage> {
             ),
             const SizedBox(height: 8),
             Text(
-            weatherCondition,
-            style: const TextStyle(fontSize: 20, fontStyle: FontStyle.italic),
+              weatherCondition,
+              style: const TextStyle(fontSize: 20, fontStyle: FontStyle.italic),
+            ),
+            SevenDayForecast(
+              weekForecast: _weekForecast,
+              onGetForecast: _getWeekForecast,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// Seven day forecast widget
+class SevenDayForecast extends StatelessWidget {
+  final List<Map<String, String>> weekForecast;
+  final VoidCallback onGetForecast;
+
+  const SevenDayForecast({
+    super.key,
+    required this.weekForecast,
+    required this.onGetForecast,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 223, 223, 223),
+        shape: BoxShape.rectangle,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: SizedBox(
+        width: 300,
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Icon(Icons.cloud),
+                Text(
+                  ' 7-day forecast ',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Icon(Icons.cloud),
+              ],
+            ),
+            const SizedBox(height: 10),
+            weekForecast.isNotEmpty
+                ? Container(
+                    color: Colors.white,
+                    child: Table(
+                      border: TableBorder.all(),
+                      children: [
+                        TableRow(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'Day',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'Temp (°F)',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
+                        ...weekForecast.map((dayForecast) => TableRow(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(dayForecast['day']!),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(dayForecast['temp']!),
+                                ),
+                              ],
+                            )),
+                      ],
+                    ),
+                  )
+                : const SizedBox.shrink(),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: onGetForecast,
+              child: const Text('Get 7-day forecast'),
             ),
           ],
         ),
