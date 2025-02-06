@@ -12,7 +12,6 @@ class WeatherApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Weather App',
-      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
@@ -35,6 +34,7 @@ class WeatherHomePageState extends State<WeatherHomePage> {
   List<Map<String, String>> _weekForecast = [];
 
   final TextEditingController _cityController = TextEditingController();
+  final conditions = ['Sunny', 'Cloudy', 'Rainy'];
   String cityName = 'City Name';
   String temperature = 'Temperature';
   String weatherCondition = 'Condition';
@@ -43,13 +43,13 @@ class WeatherHomePageState extends State<WeatherHomePage> {
     setState(() {
       //Placeholder: replace with actual API call Later
 
+
       cityName = _cityController.text.isNotEmpty ? _cityController.text : 'Unknown';
       temperature = "${Random().nextInt(16)+15}C";
       List<String> conditions = ['sunny', 'cloudy', 'rainy'];
       weatherCondition = conditions[Random().nextInt(conditions.length)];
     });
   }
-
   void _getWeekForecast() {
     setState(() {
       _weekForecast = [
@@ -77,6 +77,8 @@ class WeatherHomePageState extends State<WeatherHomePage> {
           children: [
 
             Padding(
+              
+            
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: TextField(
                 controller: _cityController,
