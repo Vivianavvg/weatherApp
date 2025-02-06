@@ -88,19 +88,34 @@ class WeatherHomePageState extends State<WeatherHomePage> {
               child: const Text('Fetch Weather'),
             ),
             const SizedBox(height: 20),
-            Text(
-              cityName,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              temperature,
-              style: const TextStyle(fontSize: 20),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              weatherCondition,
-              style: const TextStyle(fontSize: 20, fontStyle: FontStyle.italic),
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 255, 255, 255),
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.blueGrey, width: 2),
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    cityName,
+                    style: const TextStyle(
+                        fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    temperature,
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    weatherCondition,
+                    style: const TextStyle(
+                        fontSize: 20, fontStyle: FontStyle.italic),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 8),
             SevenDayForecast(
